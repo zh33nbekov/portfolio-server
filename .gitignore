@@ -1,0 +1,47 @@
+# 📂 Исключаем зависимости
+node_modules/
+npm-debug.log*
+yarn-error.log
+pnpm-lock.yaml
+package-lock.json
+
+# 📂 Файлы сборки
+dist/
+build/
+
+# 📂 Логи
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+debug.log
+*.pid
+*.seed
+*.pid.lock
+
+# 📂 Конфиденциальные файлы
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# 📂 Файлы временных сессий
+.session
+.sessions
+
+# 📂 Конфигурации IDE и редакторов
+.vscode/
+.idea/
+*.sublime-workspace
+
+# 📂 Файлы операционных систем
+.DS_Store
+Thumbs.db
+
+# 📂 Кеши
+.cache
+.nyc_output
+coverage/
+*.tsbuildinfo
