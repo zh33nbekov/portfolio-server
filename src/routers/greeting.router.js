@@ -21,7 +21,11 @@ router.post(
 	GreetingController.createGreeting
 );
 router.get('/greeting', GreetingController.fetchGreeting);
-router.patch('/greeting/:id', GreetingController.updateThroughPatchReq);
+router.patch(
+	'/greeting/:id',
+	upload.single('image'),
+	GreetingController.updateThroughPatchReq
+);
 router.put('/greeting', GreetingController.fetchGreeting);
 
 module.exports = router;

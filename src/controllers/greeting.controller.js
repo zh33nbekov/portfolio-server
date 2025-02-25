@@ -5,7 +5,7 @@ const { uploadToS3 } = require('../services/s3.service');
 class GreetingController {
 	async createGreeting(req, res, next) {
 		try {
-			const imageUrl = req.file ? await uploadToS3(req.file) : null;
+			const image = req.file;
 			const {
 				message,
 				title,
@@ -15,7 +15,7 @@ class GreetingController {
 			} = jsonParser(req.body);
 
 			const greeting = await GreetingService.createGreeting({
-				image: imageUrl,
+				image,
 				message,
 				title,
 				subtitle,
@@ -31,8 +31,9 @@ class GreetingController {
 
 	async fetchGreeting(req, res, next) {
 		try {
-			const { lang = 'ru' } = req.query;
-			const greeting = await GreetingService.fetchGreeting(lang);
+			const { lang: queryLang } = req.query;
+			const { lang: paramsLang } = req.params;
+			const greeting = await GreetingService.fetchGreeting(queryLang);
 			res.json(greeting);
 		} catch (error) {
 			next(error);
@@ -41,17 +42,17 @@ class GreetingController {
 
 	async updateThroughPatchReq(req, res, next) {
 		try {
+			const { lang = 'ru' } = req.query;
+			const image = req.file;
 			const { id } = req.params;
 			const updates = req.body;
-			const image = req.file ? req.file.location : null; // Обновляем изображение, если есть
-
-			if (image) {
-				updates.image = image;
-			}
+			console.log(id);
+			
 
 			const greeting = await GreetingService.updateThroughPatchReq(
 				id,
-				updates
+				lang,
+				{ ...updates, image }
 			);
 			res.json(greeting);
 		} catch (error) {

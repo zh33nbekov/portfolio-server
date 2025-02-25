@@ -1,23 +1,17 @@
+const setCookie = require('../helpers/setCookie');
 const AuthService = require('../services/auth.service');
 
 class AuthController {
 	async signup(req, res, next) {
 		try {
-			const { email, password } = req.body;
-			const userData = await AuthService.signup(email, password);
-			res.cookie('refreshToken', userData.refreshToken, {
-				maxAge: 30 * 24 * 60 * 60 * 1000,
-				httpOnly: true,
-				sameSite: 'None',
-				secure: true,
+			const { fullName, email, password } = req.body;
+			const adminData = await AuthService.signup(fullName, email, password);
+			setCookie(res, 'accessToken', adminData.accessToken, {
+				maxAge: 44 * 60 * 1000,
 			});
-			res.cookie('accessToken', userData.accessToken, {
-				maxAge: 15 * 60 * 1000,
-				httpOnly: true,
-				sameSite: 'None',
-				secure: true,
-			});
-			res.json({ ...userData.user, info: 'Вы успешно вошли в систему' });
+			setCookie(res, 'refreshToken', adminData.refreshToken);
+			setCookie(res, 'admin-id', adminData.admin.id);
+			res.json({ ...adminData.admin, info: 'Вы вошли в систему' });
 		} catch (error) {
 			next(error);
 		}
@@ -25,23 +19,15 @@ class AuthController {
 	async login(req, res, next) {
 		try {
 			const { email, password } = req.body;
-			const userData = await AuthService.login(email, password);
-			res.cookie('accessToken', userData.accessToken, {
-				maxAge: 15 * 60 * 1000,
-				httpOnly: true,
-				sameSite: 'None',
-				secure: true,
-				path: '/',
+			const adminData = await AuthService.login(email, password);
+			setCookie(res, 'accessToken', adminData.accessToken, {
+				maxAge: 44 * 60 * 1000,
 			});
-			res.cookie('refreshToken', userData.refreshToken, {
-				maxAge: 30 * 24 * 60 * 60 * 1000,
-				httpOnly: true,
-				sameSite: 'None',
-				secure: true,
-				path: '/',
-			});
-			res.json({ ...userData.user, info: 'Вы успешно вошли в систему' });
+			setCookie(res, 'refreshToken', adminData.refreshToken);
+			setCookie(res, 'admin-id', adminData.admin.id);
+			res.json({ admin: adminData.admin, info: 'Вы вошли в систему' });
 		} catch (error) {
+			console.log(error);
 			next(error);
 		}
 	}
@@ -60,7 +46,7 @@ class AuthController {
 				secure: true,
 			});
 			res.status(200).json({
-				message: 'Вы успешно вышли из системы',
+				message: 'Вы вышли из системы',
 				data: tokenData,
 			});
 		} catch (error) {
@@ -70,20 +56,20 @@ class AuthController {
 	async refresh(req, res, next) {
 		try {
 			const { refreshToken } = req.cookies;
-			const userData = await AuthService.refresh(refreshToken);
-			res.cookie('refreshToken', userData.refreshToken, {
+			const adminData = await AuthService.refresh(refreshToken);
+			res.cookie('refreshToken', adminData.refreshToken, {
 				maxAge: 30 * 24 * 60 * 60 * 1000,
 				httpOnly: true,
 				sameSite: 'None',
 				secure: true,
 			});
-			res.cookie('accessToken', userData.accessToken, {
+			res.cookie('accessToken', adminData.accessToken, {
 				maxAge: 15 * 60 * 1000,
 				httpOnly: true,
 				sameSite: 'None',
 				secure: true,
 			});
-			res.json(userData.user);
+			res.json(adminData.admin);
 		} catch (error) {
 			next(error);
 		}

@@ -1,40 +1,44 @@
-const User = require('../models/user.model');
+const Admin = require('../models/admin.model');
 const bcrypt = require('bcrypt');
 const TokenService = require('./token.service');
-const UserDto = require('../dto/user.dto');
+const AdminDto = require('../dto/user.dto');
 const ApiError = require('../exceptions/api.error.exception');
 
 class AuthService {
-	async signup(email, password) {
-		const oldUser = await User.findOne({ email });
-		if (oldUser) {
+	async signup(fullName, email, password) {
+		const admin = await Admin.findOne({ email });
+		if (admin) {
 			throw ApiError.badRequest(`${email} уже существует`);
 		}
 		const hashPassword = await bcrypt.hash(password, 3);
-		const newUser = await User.create({
+		const newAdmin = await Admin.create({
+			fullName,
 			email,
 			password: hashPassword,
 		});
-		const userDto = new UserDto(newUser);
-		const tokens = TokenService.generateTokens({ ...userDto });
-		await TokenService.saveRefreshToken(userDto.id, tokens.refreshToken);
+		const adminDto = new AdminDto(newAdmin);
+		const tokens = TokenService.generateTokens({ ...adminDto });
+		await TokenService.saveRefreshToken(adminDto.id, tokens.refreshToken);
 		return {
 			...tokens,
-			user: userDto,
+			admin: adminDto,
 		};
 	}
 	async login(email, password) {
-		const user = await User.findOne({ email });
-		const isValidPassword = await bcrypt.compare(password, user.password);
-		if (!isValidPassword || !user) {
+		const admin = await Admin.findOne({ email });
+		if (!admin) {
+			throw ApiError.badRequest(`Пользователь ${email} не существует`);
+		}
+		const isValidPassword = await bcrypt.compare(password, admin.password);
+		if (!isValidPassword || !admin) {
 			throw ApiError.badRequest('Неверный логин или пароль');
 		}
-		const userDto = new UserDto(user);
-		const tokens = TokenService.generateTokens({ ...userDto });
-		await TokenService.saveRefreshToken(userDto.id, tokens.refreshToken);
+		const adminDto = new AdminDto(admin);
+		const tokens = TokenService.generateTokens({ ...adminDto });
+		await TokenService.saveRefreshToken(adminDto.id, tokens.refreshToken);
 		return {
 			...tokens,
-			user: userDto,
+			admin: adminDto,
 		};
 	}
 	async refresh(refreshToken) {
@@ -46,13 +50,13 @@ class AuthService {
 		if (!token || !tokenFromDB) {
 			throw ApiError.unAuthorizedError();
 		}
-		const user = await User.findById(token.id);
-		const userDto = new UserDto(user);
-		const tokens = TokenService.generateTokens({ ...userDto });
-		await TokenService.saveRefreshToken(userDto.id, tokens.refreshToken);
+		const admin = await Admin.findById(token.id);
+		const adminDto = new AdminDto(admin);
+		const tokens = TokenService.generateTokens({ ...adminDto });
+		await TokenService.saveRefreshToken(adminDto.id, tokens.refreshToken);
 		return {
 			...tokens,
-			user: userDto,
+			admin: adminDto,
 		};
 	}
 	async logout(refreshToken) {

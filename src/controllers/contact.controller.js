@@ -1,4 +1,3 @@
-const jsonParser = require('../helpers/jsonParser');
 const ContactService = require('../services/contact.service');
 const { uploadToS3 } = require('../services/s3.service');
 
