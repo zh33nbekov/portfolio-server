@@ -36,6 +36,9 @@ app.use('/api/v1', GreetingRouter)
 app.use('/api/v1/auth', AuthRouter)
 
 app.use(ErrorMiddleware)
+app.use('/api/v1', (req, res) => {
+	res.send('Hello')
+})
 
 // Подключаем WebSocket
 // setupWebSocket(server)
