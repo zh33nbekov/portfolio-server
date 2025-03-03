@@ -27,7 +27,7 @@ jobs:
          touch .env
          echo "${{ secrets.PROD_ENV_FILE }}" > .env
     - run: |
-        echo "PROD_ENV_FILE length: ${#secrets.PROD_ENV_FILE}"
+        echo "PROD_ENV_FILE length: $(echo "${{ secrets.PROD_ENV_FILE }}" | wc -c)"
     - run: |
         echo "${{ secrets.PROD_ENV_FILE }}" > .env
         cat .env  # Проверка содержимого .env
