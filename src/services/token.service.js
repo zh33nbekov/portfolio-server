@@ -3,16 +3,12 @@ const TokenModel = require('../models/token.model')
 
 class TokenService {
 	generateTokens(payload) {
-		const accessToken = jwt.sign(
-			payload,
-			process.env.JWT_ACCESS_TOKEN_KEY,
-			{ expiresIn: '1m' }
-		)
-		const refreshToken = jwt.sign(
-			payload,
-			process.env.JWT_REFRESH_TOKEN_KEY,
-			{ expiresIn: '30d' }
-		)
+		const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_TOKEN_KEY, {
+			expiresIn: '1m',
+		})
+		const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_TOKEN_KEY, {
+			expiresIn: '30d',
+		})
 		return {
 			accessToken,
 			refreshToken,
@@ -32,23 +28,17 @@ class TokenService {
 	}
 	validateAccessToken(accessToken) {
 		try {
-			const tokenData = jwt.verify(
-				accessToken,
-				process.env.JWT_ACCESS_TOKEN_KEY
-			)
+			const tokenData = jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN_KEY)
 			return tokenData
-		} catch (error) {
+		} catch {
 			return null
 		}
 	}
 	validateRefreshToken(refreshToken) {
 		try {
-			const tokenData = jwt.verify(
-				refreshToken,
-				process.env.JWT_REFRESH_TOKEN_KEY
-			)
+			const tokenData = jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN_KEY)
 			return tokenData
-		} catch (error) {
+		} catch {
 			return null
 		}
 	}

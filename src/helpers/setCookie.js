@@ -5,7 +5,7 @@ const setCookie = (res, name, value, options = {}) => {
 		sameSite: options.sameSite || 'None',
 		secure: options.secure !== false, // По умолчанию true
 		...options, // Позволяет переопределить любые параметры
-	});
-};
+	})
+}
 
-module.exports = setCookie;
+module.exports = setCookie

@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model } = require('mongoose')
 
 const About = new Schema({
 	image: { type: String, required: true },
@@ -6,6 +6,6 @@ const About = new Schema({
 		en: { type: String, required: true },
 		ru: { type: String, required: true },
 	},
-});
+})
 
-module.exports = model('About', About, 'about');
+module.exports = model('About', About, 'about')

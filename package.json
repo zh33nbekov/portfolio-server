@@ -4,7 +4,10 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "nodemon ./src/main.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"format": "prettier --write \"**/*.{js,json}\""
 	},
 	"keywords": [],
 	"author": "Rai-Software-Engineer",
@@ -24,7 +27,13 @@
 		"socket.io": "^4.8.1"
 	},
 	"devDependencies": {
+		"@eslint/js": "^9.21.0",
 		"dotenv": "^16.4.7",
-		"nodemon": "^3.1.9"
+		"eslint": "^9.21.0",
+		"eslint-config-prettier": "^10.0.2",
+		"eslint-plugin-prettier": "^5.2.3",
+		"globals": "^16.0.0",
+		"nodemon": "^3.1.9",
+		"prettier": "^3.5.3"
 	}
 }

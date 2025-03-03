@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model } = require('mongoose')
 
 const Token = new Schema({
 	user: {
@@ -9,6 +9,6 @@ const Token = new Schema({
 		type: String,
 		required: true,
 	},
-});
+})
 
-module.exports = model('Token', Token);
+module.exports = model('Token', Token)
