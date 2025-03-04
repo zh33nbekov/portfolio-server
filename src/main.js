@@ -20,10 +20,11 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(
 	cors({
-		origin: ['http://localhost:3000', 'http://localhost:3001', 'http://51.21.190.194'],
+		origin: ['http://localhost:3000', 'http://localhost:3001'],
 		credentials: true,
 	})
 )
+
 app.use('/api/v1', AdminRouter)
 app.use('/api/v1', AboutRouter)
 app.use('/api/v1', MessageRouter)
