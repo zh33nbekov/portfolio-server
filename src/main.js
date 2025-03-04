@@ -20,11 +20,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(
 	cors({
-		origin: [
-			'http://localhost:3000',
-			'http://localhost:3001',
-			'https://v8np4swc-3000.euw.devtunnels.ms',
-		],
+		origin: ['http://localhost:3000', 'http://localhost:3001'],
 		credentials: true,
 	})
 )
@@ -36,9 +32,6 @@ app.use('/api/v1', GreetingRouter)
 app.use('/api/v1/auth', AuthRouter)
 
 app.use(ErrorMiddleware)
-app.use('/api/v1', (req, res) => {
-	res.send('Hello')
-})
 
 // Подключаем WebSocket
 // setupWebSocket(server)
