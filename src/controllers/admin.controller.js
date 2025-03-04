@@ -4,6 +4,7 @@ class AdminController {
 	async getAdminProfile(req, res, next) {
 		try {
 			const id = req.cookies['admin-id']
+			console.log(id, 'adminId')
 			const admin = await AdminService.getAdminProfile(id)
 			res.json(admin)
 		} catch (error) {
