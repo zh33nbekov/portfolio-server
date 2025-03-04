@@ -3,10 +3,11 @@ const { Server } = require('socket.io')
 /**
  * @param {import("http").Server} server
  */
+
 const setupWebSocket = (server) => {
 	const io = new Server(server, {
 		cors: {
-			origin: ['http://localhost:3000', 'http://localhost:3001'],
+			origin: ['http://localhost:3000', 'http://localhost:3001', 'http://51.21.190.194'],
 			credentials: true,
 		},
 	})
