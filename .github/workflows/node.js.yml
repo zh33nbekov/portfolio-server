@@ -24,3 +24,4 @@ jobs:
          echo "${{ secrets.PROD_ENV_FILE }}" > .env
     - run: |
         cat .env  # Проверка содержимого .env
+    - run: pm2 restart BackendAPI
