@@ -19,7 +19,7 @@ const Greeting = new Schema({
 		ru: { type: String, required: true },
 	},
 	buttons: {
-		isDisabled: { type: Boolean },
+		isActive: { type: Boolean, default: false },
 		left: {
 			title: {
 				en: { type: String, required: true },

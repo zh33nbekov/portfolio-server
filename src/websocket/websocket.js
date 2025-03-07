@@ -1,82 +1,106 @@
-const { Server } = require('socket.io')
+// apps/server/socket.js
+const socketIo = require('socket.io')
 
-/**
- * @param {import("http").Server} server
- */
+let connectedClients = []
 
-const setupWebSocket = (server) => {
-	const io = new Server(server, {
+function setupWebSocket(server) {
+	const io = socketIo(server, {
 		cors: {
-			origin: ['http://localhost:3000', 'http://localhost:3001'],
-			credentials: true,
+			origin: '*',
+			methods: ['GET', 'POST'],
 		},
 	})
 
-	let adminSocket = null // для отслеживания подключения только одного администратора
-	let clientSockets = {} // для хранения клиентов
-
 	io.on('connection', (socket) => {
-		// Определяем роль клиента
-		const { role } = socket.handshake.query
-		if (role === 'client') {
-			// Клиент создаёт свою уникальную комнату (по socket.id)
-			socket.join(socket.id)
-			clientSockets[socket.id] = socket
-			console.log(`👤 Клиент ${socket.id} присоединился.`)
-		} else if (role === 'admin') {
-			// Админ подключается
-			if (adminSocket) {
-				socket.emit('adminError', 'Только один администратор может быть подключен')
-				socket.disconnect()
-			} else {
-				adminSocket = socket
-				socket.join('admins')
-				console.log(`🛠 Админ ${socket.id} подключился.`)
+		console.log('New client connected:', socket.id)
+
+		// Обработка регистрации клиента
+		socket.on('register', (userData) => {
+			const newClient = {
+				id: socket.id,
+				name: userData.name,
+				isAdmin: userData.isAdmin || false,
+				connected: true,
 			}
-		}
 
-		// Клиент отправляет сообщение → только в его комнату
-		socket.on('clientMessage', (message) => {
-			console.log(`📩 Клиент ${socket.id} отправил сообщение:`, message)
-			io.to('admins').emit('adminReceive', { clientId: socket.id, message })
+			// Если клиент - админ
+			if (userData.isAdmin) {
+				// Отправляем список всех клиентов админу
+				socket.emit(
+					'clientsList',
+					connectedClients.filter((client) => !client.isAdmin)
+				)
+			} else {
+				// Добавляем клиента в список
+				connectedClients.push(newClient)
+
+				// Уведомляем админа о новом клиенте
+				io.emit('newClient', newClient)
+			}
+
+			// Подтверждаем регистрацию
+			socket.emit('registered', { success: true, id: socket.id })
+			console.log(
+				`Client registered: ${userData.name} (${socket.id}), isAdmin: ${userData.isAdmin}`
+			)
 		})
 
-		// Админ отправляет ответ клиенту (только в его комнату)
-		socket.on('adminResponse', ({ clientId, response }) => {
-			console.log(`📨 Админ отправил клиенту ${clientId}:`, response)
-			io.to(clientId).emit('clientReceive', response)
-		})
+		// Обработка сообщений
+		socket.on('message', (messageData) => {
+			console.log('New message:', messageData)
 
-		// Индикатор набора текста
-		socket.on('typing', () => {
-			if (role === 'admin' && adminSocket === socket) {
-				io.emit('adminTyping')
-			} else if (role === 'client') {
-				io.to('admins').emit('userTyping', {
-					clientId: socket.id,
-					role: 'client',
+			if (messageData.isAdmin) {
+				// Если отправитель - админ, отправляем сообщение конкретному клиенту
+				io.to(messageData.to).emit('message', {
+					id: Date.now(),
+					text: messageData.text,
+					from: 'admin',
+					to: messageData.to,
+					timestamp: new Date().toISOString(),
+				})
+			} else {
+				// Если отправитель - клиент, отправляем сообщение админу
+				io.emit('clientMessage', {
+					id: Date.now(),
+					text: messageData.text,
+					from: socket.id,
+					fromName: messageData.fromName,
+					timestamp: new Date().toISOString(),
 				})
 			}
 		})
 
-		socket.on('stopTyping', () => {
-			if (role === 'admin' && adminSocket === socket) {
-				io.emit('adminStopTyping')
-			} else if (role === 'client') {
-				io.to('admins').emit('userStoppedTyping', { clientId: socket.id })
+		// Обработка отключения клиента
+		socket.on('disconnect', () => {
+			console.log('Client disconnected:', socket.id)
+
+			// Находим и обновляем статус клиента
+			const clientIndex = connectedClients.findIndex((client) => client.id === socket.id)
+			if (clientIndex !== -1) {
+				connectedClients[clientIndex].connected = false
+
+				// Уведомляем админа об отключении клиента
+				io.emit('clientDisconnected', { id: socket.id })
+
+				// Через некоторое время удаляем клиента из списка
+				setTimeout(
+					() => {
+						connectedClients = connectedClients.filter((client) => client.id !== socket.id)
+						io.emit('clientRemoved', { id: socket.id })
+					},
+					5 * 60 * 1000
+				) // 5 минут
 			}
 		})
 
-		// Отключение клиента
-		socket.on('disconnect', () => {
-			if (role === 'client') {
-				delete clientSockets[socket.id]
-			} else if (role === 'admin') {
-				adminSocket = null
-			}
-			console.log(`❌ Клиент отключен: ${socket.id}`)
+		// Обработка выбора клиента админом
+		socket.on('selectClient', (clientId) => {
+			console.log('Admin selected client:', clientId)
+			socket.emit('clientSelected', { id: clientId })
 		})
 	})
+
+	return io
 }
 
 module.exports = { setupWebSocket }

@@ -32,6 +32,7 @@ class GreetingController {
 			const { lang: queryLang } = req.query
 			const greeting = await GreetingService.fetchGreeting(queryLang)
 			res.json(greeting)
+			console.log(greeting)
 		} catch (error) {
 			next(error)
 		}

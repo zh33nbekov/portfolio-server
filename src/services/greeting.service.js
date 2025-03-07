@@ -34,7 +34,7 @@ class GreetingService {
 				subtitle: greeting.subtitle[lang],
 				description: greeting.description[lang],
 				buttons: {
-					isDisabled: greeting.buttons.isDisabled,
+					isActive: greeting.buttons.isActive,
 					left: {
 						title: greeting.buttons.left.title[lang],
 						link: greeting.buttons.left.link,
@@ -87,8 +87,8 @@ class GreetingService {
 			})
 
 			if (updates.buttons) {
-				if (updates.buttons.isDisabled !== undefined) {
-					updateData['buttons.isDisabled'] = updates.buttons.isDisabled
+				if (updates.buttons.isActive !== undefined) {
+					updateData['buttons.isActive'] = updates.buttons.isActive
 				}
 				if (updates.buttons.left) {
 					if (updates.buttons.left.title) {
