@@ -5,6 +5,6 @@ const router = new Router()
 
 router.post('/about', upload.single('image'), AboutController.createAbout)
 router.get('/about', AboutController.fetchAbout)
-router.patch('/about/:id', AboutController.updateThroughPtchReq)
+router.patch('/about/:id', upload.single('image'), AboutController.updateThroughPtchReq)
 
 module.exports = router

@@ -30,8 +30,11 @@ class AboutController {
 	async updateThroughPtchReq(req, res, next) {
 		try {
 			const { id } = req.params
+			const { lang = 'ru' } = req.query
+			const image = req.file
 			const updates = req.body
-			const about = await AboutService.updateThroughPtchReq(id, updates)
+			const about = await AboutService.updateThroughPtchReq(id, lang, { ...updates, image })
+			console.log(image)
 			res.json(about)
 		} catch (error) {
 			next()
