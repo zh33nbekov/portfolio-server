@@ -51,25 +51,6 @@ class GreetingService {
 		}
 	}
 
-	async updateThroughPutReq(id, lang, updates) {
-		try {
-			const updateFields = {}
-			for (const key in updates) {
-				updateFields[`${key}.${lang}`] = updates[key]
-			}
-
-			const updatedGreeting = await GreetingModel.findByIdAndUpdate(
-				id,
-				{ $set: updateFields },
-				{ new: true, overwrite: true }
-			)
-			return updatedGreeting
-		} catch (error) {
-			console.error(error)
-			throw error
-		}
-	}
-
 	async updateThroughPatchReq(id, lang, updates) {
 		try {
 			const updateData = {}

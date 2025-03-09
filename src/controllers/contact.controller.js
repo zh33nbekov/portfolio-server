@@ -7,29 +7,26 @@ class ContactController {
 			const imageUrl = req.file ? await uploadToS3(req.file) : null
 			const contact = await ContactService.createContact(imageUrl)
 			res.json(contact)
-		} catch (error) {
+		} catch {
 			next()
-			console.log(error)
 		}
 	}
 	async fetchContact(req, res, next) {
 		try {
 			const contact = await ContactService.fetchContact()
 			res.json(contact)
-		} catch (error) {
-			console.log(error)
+		} catch {
 			next()
 		}
 	}
 	async updateThroughPtchReq(req, res, next) {
 		try {
 			const { id } = req.params
-			const updates = req.body
-			const contact = await ContactService.updateThroughPtchReq(id, updates)
+			const image = req.file
+			const contact = await ContactService.updateThroughPtchReq(id, image)
 			res.json(contact)
-		} catch (error) {
+		} catch {
 			next()
-			console.log(error)
 		}
 	}
 }

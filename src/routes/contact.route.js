@@ -5,6 +5,6 @@ const router = new Router()
 
 router.post('/contact', upload.single('image'), ContactController.createContact)
 router.get('/contact', ContactController.fetchContact)
-router.patch('/contact/:id', ContactController.updateThroughPtchReq)
+router.patch('/contact/:id', upload.single('image'), ContactController.updateThroughPtchReq)
 
 module.exports = router
