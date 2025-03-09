@@ -20,7 +20,12 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(
 	cors({
-		origin: ['http://localhost:3000', 'http://localhost:3001'],
+		origin: [
+			'http://localhost:3000',
+			'http://localhost:3001',
+			'https://rai-zheenbekov.vercel.app',
+			'https://admin-dashboard-psi-swart-65.vercel.app',
+		],
 		credentials: true,
 	})
 )
