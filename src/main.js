@@ -21,10 +21,10 @@ app.use(cookieParser())
 app.use(
 	cors({
 		origin: [
-			'http://localhost:3000',
-			'http://localhost:3001',
-			'https://rai-zheenbekov.vercel.app',
-			'https://admin-dashboard-psi-swart-65.vercel.app',
+			process.env.LOCAL_CLIENT_URL,
+			process.env.LOCAL_ADMIN_URL,
+			process.env.PUBLIC_CLIENT_URL,
+			process.env.PUBLIC_ADMIN_URL,
 		],
 		credentials: true,
 	})
