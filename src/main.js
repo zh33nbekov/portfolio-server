@@ -39,7 +39,6 @@ app.use('/api/v1/auth', AuthRouter)
 
 app.use(ErrorMiddleware)
 
-// Подключаем WebSocket
 // setupWebSocket(server)
 
 const startServer = async () => {
