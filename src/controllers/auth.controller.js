@@ -7,7 +7,8 @@ class AuthController {
 			const { fullName, email, password } = req.body
 			const adminData = await AuthService.signup(fullName, email, password)
 			setCookie(res, 'accessToken', adminData.accessToken, {
-				maxAge: 44 * 60 * 1000,
+				maxAge: 15 * 60 * 1000,
+				httpOnly: false,
 			})
 			setCookie(res, 'refreshToken', adminData.refreshToken)
 			setCookie(res, 'admin-id', adminData.admin.id)
@@ -21,7 +22,8 @@ class AuthController {
 			const { email, password } = req.body
 			const adminData = await AuthService.login(email, password)
 			setCookie(res, 'accessToken', adminData.accessToken, {
-				maxAge: 44 * 60 * 1000,
+				maxAge: 15 * 60 * 1000,
+				httpOnly: false,
 			})
 			setCookie(res, 'refreshToken', adminData.refreshToken)
 			setCookie(res, 'admin-id', adminData.admin.id)
