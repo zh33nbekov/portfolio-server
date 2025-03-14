@@ -47,6 +47,11 @@ class AuthController {
 				sameSite: 'None',
 				secure: true,
 			})
+			res.clearCookie('admin-id', {
+				httpOnly: true,
+				sameSite: 'None',
+				secure: true,
+			})
 			res.status(200).json({
 				message: 'Вы вышли из системы',
 				data: tokenData,
