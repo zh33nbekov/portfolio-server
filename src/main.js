@@ -39,6 +39,7 @@ app.use('/api/v1/auth', AuthRouter)
 app.use(ErrorMiddleware)
 
 setupWebSocket(server)
+//
 
 const startServer = async () => {
 	const PORT = process.env.PORT || 5500
