@@ -20,9 +20,11 @@ class AuthController {
 		try {
 			const { email, password } = req.body
 			const adminData = await AuthService.login(email, password)
-			setCookie(res, 'accessToken', adminData.accessToken, { secure: false })
-			setCookie(res, 'refreshToken', adminData.refreshToken, { secure: false })
-			setCookie(res, 'admin-id', adminData.admin.id, { secure: false })
+			setCookie(res, 'accessToken', adminData.accessToken, {
+				maxAge: 44 * 60 * 1000,
+			})
+			setCookie(res, 'refreshToken', adminData.refreshToken)
+			setCookie(res, 'admin-id', adminData.admin.id)
 			res.json({ admin: adminData.admin, info: 'Вы вошли в систему' })
 		} catch (error) {
 			console.log(error)
