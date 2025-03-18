@@ -4,7 +4,7 @@ const setCookie = (res, name, value, options = {}) => {
 		httpOnly: options.httpOnly !== false, // По умолчанию true
 		sameSite: options.sameSite || 'None',
 		secure: options.secure !== false, // По умолчанию true
-		domain: 'rai-portfolio-api.online',
+		// domain: 'rai-portfolio-api.online',
 		path: '/',
 		...options, // Позволяет переопределить любые параметры
 	})
