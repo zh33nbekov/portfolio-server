@@ -101,7 +101,7 @@ class GreetingService {
 
 			return updatedGreeting
 		} catch (error) {
-			console.error(error)
+			console.log(error)
 			throw error
 		}
 	}

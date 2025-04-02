@@ -19,7 +19,7 @@ class AboutController {
 	}
 	async fetchAbout(req, res, next) {
 		try {
-			const { lang = 'ru' } = req.query
+			const lang = req.acceptsLanguages()
 			const about = await AboutService.fetchAbout(lang)
 			res.json(about)
 		} catch (error) {
@@ -30,7 +30,7 @@ class AboutController {
 	async updateThroughPtchReq(req, res, next) {
 		try {
 			const { id } = req.params
-			const { lang = 'ru' } = req.query
+			const lang = req.acceptsLanguages()
 			const image = req.file
 			const updates = req.body
 			const about = await AboutService.updateThroughPtchReq(id, lang, { ...updates, image })

@@ -29,10 +29,9 @@ class GreetingController {
 
 	async fetchGreeting(req, res, next) {
 		try {
-			const { lang: queryLang } = req.query
-			const greeting = await GreetingService.fetchGreeting(queryLang)
+			const lang = req.acceptsLanguages()
+			const greeting = await GreetingService.fetchGreeting(lang)
 			res.json(greeting)
-			console.log(greeting)
 		} catch (error) {
 			next(error)
 		}
@@ -40,7 +39,7 @@ class GreetingController {
 
 	async updateThroughPatchReq(req, res, next) {
 		try {
-			const { lang = 'ru' } = req.query
+			const lang = req.acceptsLanguages()
 			const image = req.file
 			const { id } = req.params
 			const updates = jsonParser(req.body)
