@@ -3,14 +3,14 @@ const FeedbackService = require('../services/feedback.service')
 class FeedbackController {
 	async sendFeedback(req, res, next) {
 		try {
+			const lang = req.acceptsLanguages()
 			const { name, email, message: reqMsg } = req.body
 			await FeedbackService.sendFeedback({
 				name,
 				email,
 				message: reqMsg,
 			})
-			console.log(req.body)
-			res.json({ info: 'Успешно отправлен' })
+			res.json({ info: lang === 'ru' ? 'Успешно отправлен' : 'Successfully sent' })
 		} catch (error) {
 			next(error)
 		}
