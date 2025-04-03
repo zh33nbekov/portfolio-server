@@ -24,6 +24,23 @@ class FeedbackController {
 			next(error)
 		}
 	}
+	async clearFeedback(req, res, next) {
+		try {
+			await FeedbackService.clearFeedback()
+			res.json({ info: 'Все объекты удалены' })
+		} catch (error) {
+			next(error)
+		}
+	}
+	async removeFeedback(req, res, next) {
+		try {
+			const { id } = req.params
+			await FeedbackService.removeFeedback(id)
+			res.json({ info: 'Успешно удалено' })
+		} catch (error) {
+			next(error)
+		}
+	}
 }
 
 module.exports = new FeedbackController()
