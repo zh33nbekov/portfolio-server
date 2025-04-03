@@ -3,7 +3,8 @@ const FeedbackService = require('../services/feedback.service')
 class FeedbackController {
 	async sendFeedback(req, res, next) {
 		try {
-			const lang = req.acceptsLanguages()
+			const lang = req.acceptsLanguages()[0]
+			console.log(lang)
 			const { name, email, message: reqMsg } = req.body
 			await FeedbackService.sendFeedback({
 				name,
