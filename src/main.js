@@ -3,7 +3,6 @@ const cors = require('cors')
 const express = require('express')
 const cookieParser = require('cookie-parser')
 const AuthRouter = require('./routes/auth.route')
-const { default: mongoose } = require('mongoose')
 const ErrorMiddleware = require('./middlewares/error.middleware')
 const GreetingRouter = require('./routes/greeting.route')
 const AboutRouter = require('./routes/about.route')
@@ -12,6 +11,7 @@ const MessageRouter = require('./routes/feedback.route')
 const ContactRouter = require('./routes/contact.route')
 const { setupWebSocket } = require('./websocket/websocket')
 const http = require('http')
+const connectToMongo = require('./lib/mongoDB')
 
 const app = express()
 const server = http.createServer(app)
@@ -42,12 +42,11 @@ setupWebSocket(server)
 
 const startServer = async () => {
 	const PORT = process.env.PORT || 5500
-	const DB_URI = process.env.MONGO_URI || ''
 	try {
-		await mongoose.connect(DB_URI)
-		server.listen(PORT, () => console.log('🚀 Server started on port ' + PORT))
-	} catch (err) {
-		console.log(err, 'error')
+		await connectToMongo()
+		server.listen(PORT, () => console.log('Сервер запущен на порту ' + PORT))
+	} catch (error) {
+		console.log(error, 'error')
 	}
 }
 
