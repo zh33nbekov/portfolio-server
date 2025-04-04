@@ -11,14 +11,17 @@ class FeedbackController {
 				email,
 				message: reqMsg,
 			})
-			res.json({ info: lang === 'ru' ? 'Успешно отправлен' : 'Successfully sent' })
+			res.json({ info: lang === 'en' ? 'Successfully sent' : 'Успешно отправлен' })
 		} catch (error) {
 			next(error)
 		}
 	}
 	async getFeedback(req, res, next) {
 		try {
-			const feedback = await FeedbackService.getFeedback()
+			const page = parseInt(req.query.page) || 1
+			const limit = parseInt(req.query.limit) || 10
+
+			const feedback = await FeedbackService.getFeedback({ page, limit })
 			res.json(feedback)
 		} catch (error) {
 			next(error)

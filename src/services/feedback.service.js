@@ -5,9 +5,25 @@ class FeedbackService {
 		const feedback = await FeedbackModel.create(newFeedback)
 		return feedback
 	}
-	async getFeedback() {
-		const feedback = await FeedbackModel.find()
-		return feedback
+	// async getFeedback() {
+	// 	const feedback = await FeedbackModel.find()
+	// 	return feedback
+	// }
+	async getFeedback({ page = 1, limit = 10 }) {
+		const skip = (page - 1) * limit
+
+		const [data, total] = await Promise.all([
+			FeedbackModel.find().skip(skip).limit(limit),
+			FeedbackModel.countDocuments(),
+		])
+
+		return {
+			data,
+			page,
+			limit,
+			totalPages: Math.ceil(total / limit),
+			totalItems: total,
+		}
 	}
 	async clearFeedback() {
 		await FeedbackModel.deleteMany()
