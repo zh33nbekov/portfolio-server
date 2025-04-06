@@ -5,10 +5,6 @@ class FeedbackService {
 		const feedback = await FeedbackModel.create(newFeedback)
 		return feedback
 	}
-	// async getFeedback() {
-	// 	const feedback = await FeedbackModel.find()
-	// 	return feedback
-	// }
 	async getFeedback({ page = 1, limit = 10 }) {
 		const skip = (page - 1) * limit
 

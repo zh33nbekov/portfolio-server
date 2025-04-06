@@ -12,7 +12,7 @@ const limiter = rateLimit({
 })
 
 router.get('/feedback', FeedbackController.getFeedback)
-router.post('/feedback', limiter, FeedbackController.sendFeedback)
+router.post('/feedback', FeedbackController.sendFeedback)
 router.delete('/feedback', FeedbackController.clearFeedback)
 router.delete('/feedback/:id', FeedbackController.removeFeedback)
 

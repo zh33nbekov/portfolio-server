@@ -12,22 +12,13 @@ const ContactRouter = require('./routes/contact.route')
 const { setupWebSocket } = require('./websocket/websocket')
 const http = require('http')
 const connectToMongo = require('./lib/mongoDB')
+const getCorsOptions = require('./lib/getCorsOptions')
 
 const app = express()
 const server = http.createServer(app)
 app.use(express.json())
 app.use(cookieParser())
-app.use(
-	cors({
-		origin: [
-			process.env.LOCAL_CLIENT_URL,
-			process.env.LOCAL_ADMIN_URL,
-			process.env.PUBLIC_CLIENT_URL,
-			process.env.PUBLIC_ADMIN_URL,
-		],
-		credentials: true,
-	})
-)
+app.use(cors(getCorsOptions()))
 
 app.use('/api/v1', AdminRouter)
 app.use('/api/v1', AboutRouter)
